@@ -6,7 +6,9 @@ abstract class BinaryTree {
 
   def foreach(f: Int => Unit)
 
-//  def filter(p: Int => Boolean): BinaryTree
+  def filter(p: Int => Boolean): BinaryTree = filterAcc(p, new Empty)
+
+  def filterAcc(p: Int => Boolean, acc: BinaryTree): BinaryTree
 
 }
 
@@ -15,7 +17,7 @@ class Empty extends BinaryTree {
 
   override def foreach(f: (Int) => Unit): Unit = {}
 
-//  override def filter(p: (Int) => Boolean): BinaryTree = ???
+  override def filterAcc(p: (Int) => Boolean, acc: BinaryTree): BinaryTree = acc
 
   override def toString: String = ""
 }
@@ -31,6 +33,11 @@ class Node(elem: Int, left: BinaryTree, right: BinaryTree) extends BinaryTree {
     left.foreach(f)
     f.apply(elem)
     right.foreach(f)
+  }
+
+  override def filterAcc(p: (Int) => Boolean, acc: BinaryTree): BinaryTree = {
+    if(p.apply(elem)) left.filterAcc(p, right.filterAcc(p, acc.incl(elem)))
+    else left.filterAcc(p, right.filterAcc(p, acc))
   }
 
   override def toString: String =  left.toString + " " + elem + " " + right.toString

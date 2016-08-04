@@ -43,7 +43,7 @@ class Node(elem: Int, left: BinaryTree, right: BinaryTree) extends BinaryTree {
     if(p.apply(elem)) left.filterAcc(p, right.filterAcc(p, acc.incl(elem)))
     else left.filterAcc(p, right.filterAcc(p, acc))
 
-  override def union(that: BinaryTree): BinaryTree = left.union(right.union(that)).incl(elem)
+  override def union(that: BinaryTree): BinaryTree = (that union left union right) incl elem
 
   override def toString: String =  left.toString + " " + elem + " " + right.toString
 }

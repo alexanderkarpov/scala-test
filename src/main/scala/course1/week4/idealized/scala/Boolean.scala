@@ -17,7 +17,18 @@ abstract class Boolean {
 
   def !=(x: Boolean): Boolean = ifThenElse(x.unary_!, x)
 
-  def < (x: => Boolean): Boolean = ???
+  /**
+    * false < true --> true
+    * false < false --> false
+    * true < false --> false
+    * true < true --> false
+    *
+    * @param x
+    * @return
+    */
+  def < (x: => Boolean): Boolean = ifThenElse(False, x)
+
+
 
 
 }
@@ -35,5 +46,8 @@ object False extends Boolean {
 }
 
 object Main extends App {
-  println(True && True)
+  println(False < False)
+  println(False < True)
+  println(True < False)
+  println(True < True)
 }

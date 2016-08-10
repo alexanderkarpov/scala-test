@@ -1,11 +1,11 @@
-package course1.week4.idealized.scala
+package course1.week4.lesson1
 
 /**
   * Created by alexander on 8/9/16.
   */
 abstract class Nat {
 
-  def isZero: scala.Boolean
+  def isZero: Boolean
 
   /**
     *
@@ -32,19 +32,19 @@ abstract class Nat {
 }
 
 object Zero extends Nat {
-  override def isZero: Boolean = ???
+  override def isZero: Boolean = true
 
   /**
     *
     * @return prev natural number or throw the Exception if the current nmb is 0
     */
-  override def predecessor: Nat = ???
+  override def predecessor: Nat = throw new NoSuchElementException
 
   /**
     *
     * @return next natural number
     */
-  override def successor: Nat = ???
+  override def successor: Nat = new Succ(this)
 
   override def +(that: Nat): Nat = ???
 
@@ -54,11 +54,17 @@ object Zero extends Nat {
     * @param that
     * @return
     */
-  override def -(that: Nat): Nat = ???
+  override def -(that: Nat): Nat = if (that.isZero) this else throw new NoSuchElementException
 }
 
+/**
+  * represents the number that the one bigger than the number in argument
+  * @param n
+  */
 class Succ(n: Nat) extends Nat {
-  override def isZero: Boolean = ???
+
+
+  override def isZero: Boolean = false
 
   /**
     *
@@ -70,7 +76,7 @@ class Succ(n: Nat) extends Nat {
     *
     * @return next natural number
     */
-  override def successor: Nat = ???
+  override def successor: Nat = new Succ(this)
 
   override def +(that: Nat): Nat = ???
 

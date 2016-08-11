@@ -1,4 +1,4 @@
-package course1.week4.idealized.scala
+package course1.week4.lesson1.idealized.scala
 
 /**
   * Created by alexander on 8/9/16.

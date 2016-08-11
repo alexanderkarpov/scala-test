@@ -1,6 +1,7 @@
 package course1.week4.lesson1
 
 /**
+  * Peano numbers
   * Created by alexander on 8/9/16.
   */
 abstract class Nat {
@@ -17,7 +18,7 @@ abstract class Nat {
     *
     * @return next natural number
     */
-  def successor: Nat
+  def successor: Nat = new Succ(this)
 
   def +(that: Nat): Nat
 
@@ -32,59 +33,28 @@ abstract class Nat {
 }
 
 object Zero extends Nat {
+
   override def isZero: Boolean = true
 
-  /**
-    *
-    * @return prev natural number or throw the Exception if the current nmb is 0
-    */
   override def predecessor: Nat = throw new NoSuchElementException
 
-  /**
-    *
-    * @return next natural number
-    */
-  override def successor: Nat = new Succ(this)
+  override def +(that: Nat): Nat = that
 
-  override def +(that: Nat): Nat = ???
-
-  /**
-    * throws the exception if the result is negative
-    *
-    * @param that
-    * @return
-    */
   override def -(that: Nat): Nat = if (that.isZero) this else throw new NoSuchElementException
 }
 
 /**
   * represents the number that the one bigger than the number in argument
+  *
   * @param n
   */
 class Succ(n: Nat) extends Nat {
 
-
   override def isZero: Boolean = false
 
-  /**
-    *
-    * @return prev natural number or throw the Exception if the current nmb is 0
-    */
-  override def predecessor: Nat = ???
+  override def predecessor: Nat = n
 
-  /**
-    *
-    * @return next natural number
-    */
-  override def successor: Nat = new Succ(this)
+  override def +(that: Nat): Nat = new Succ(n + that) //n + that
 
-  override def +(that: Nat): Nat = ???
-
-  /**
-    * throws the exception if the result is negative
-    *
-    * @param that
-    * @return
-    */
-  override def -(that: Nat): Nat = ???
+  override def -(that: Nat): Nat = if (that.isZero) this else n - predecessor
 }

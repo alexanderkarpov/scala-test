@@ -1,4 +1,4 @@
-package course1.week4.lesson2
+package course1.week4.lecture2
 
 /**
   * Created by alexander on 8/11/16.

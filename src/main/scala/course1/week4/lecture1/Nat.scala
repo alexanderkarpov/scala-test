@@ -1,4 +1,4 @@
-package course1.week4.lesson1
+package course1.week4.lecture1
 
 /**
   * Peano numbers

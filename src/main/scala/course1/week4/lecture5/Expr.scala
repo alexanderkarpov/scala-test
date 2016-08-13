@@ -6,9 +6,13 @@ package course1.week4.lecture5
 trait Expr {
 
   def isNumber: Boolean
+
   def isSum: Boolean
+
   def numValue: Int
+
   def leftOp: Expr
+
   def rightOp: Expr
 
 }
@@ -40,9 +44,13 @@ class Sum(e1: Expr, e2: Expr) extends Expr {
 object Test extends App {
 
   def eval(e: Expr): Int = {
-    if(e.isNumber) e.numValue
+    if (e.isNumber) e.numValue
     else if (e.isSum) eval(e.leftOp) + eval(e.rightOp)
     else throw new UnsupportedOperationException("unknown operation")
   }
+
+  val s = eval(new Sum(new Number(1), new Number(2)))
+
+  println(s)
 
 }

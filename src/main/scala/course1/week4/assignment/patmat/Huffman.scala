@@ -82,7 +82,10 @@ object Huffman extends App {
     * println("integer is  : "+ theInt)
     * }
     */
-  def times(chars: List[Char]): List[(Char, Int)] = ???
+  def times(chars: List[Char]): List[(Char, Int)] = {
+    val m: Map[Char, Int] = chars.groupBy(x => x) map { case (k, v) => k -> v.length }
+    m.map(e => (e._1, e._2)).toList
+  }
 
   /**
     * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
@@ -219,6 +222,10 @@ object Huffman extends App {
   )
 
   println(makeString(sampleTree))
+
+  val chars: List[Char] = List('a','b','c','d','a','c','f','e','f','b','b')
+
+  println(times(chars))
 
 
 }

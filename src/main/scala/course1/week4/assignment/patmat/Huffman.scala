@@ -176,7 +176,20 @@ object Huffman extends App {
     * This function decodes the bit sequence `bits` using the code tree `tree` and returns
     * the resulting list of characters.
     */
-  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = ???
+  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = {
+
+    //FIXME: something goes wrong here
+    def loop(tree: CodeTree, bits: List[Bit], acc: List[Char]): List[Char] = tree match {
+      case Leaf(ch, _) => acc ::: List[Char](ch)
+      case Fork(left, right, _, _) =>
+      if (bits.isEmpty) throw new IllegalStateException("not enough bits")
+        else if (bits.head == 0) loop(left, bits.tail, acc)
+        else loop(right, bits.tail, acc)
+    }
+
+
+    loop(tree, bits, List())
+  }
 
   /**
     * A Huffman coding tree for the French language.
@@ -194,7 +207,7 @@ object Huffman extends App {
   /**
     * Write a function that returns the decoded secret
     */
-  def decodedSecret: List[Char] = ???
+  def decodedSecret: List[Char] = decode(frenchCode, secret)
 
 
   // Part 4a: Encoding using Huffman tree
@@ -260,6 +273,8 @@ object Huffman extends App {
   println(tree.map(leaf => makeString(leaf)))
 
   println(makeString(createCodeTree(chars)))
+
+  println(decodedSecret.mkString(""))
 
 
 }

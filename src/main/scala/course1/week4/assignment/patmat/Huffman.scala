@@ -126,7 +126,15 @@ object Huffman extends App {
     * If `trees` is a list of less than two elements, that list should be returned
     * unchanged.
     */
-  def combine(trees: List[CodeTree]): List[CodeTree] = ???
+  def combine(trees: List[CodeTree]): List[CodeTree] = //TODO: test it
+    if (trees.size < 2) trees
+    else {
+      val first = trees.head
+      val second = trees.tail.head
+      val fork = new Fork(left = first, right = second, chars = chars(first) ::: chars(second), weight = weight(first) + weight(second))
+      fork :: trees.tail.tail
+    }
+
 
   /**
     * This function will be called in the following way:
@@ -140,10 +148,10 @@ object Huffman extends App {
     * code trees contains only one single tree, and then return that singleton list.
     *
     * Hint: before writing the implementation,
-    *  - start by defining the parameter types such that the above example invocation
+    * - start by defining the parameter types such that the above example invocation
     * is valid. The parameter types of `until` should match the argument types of
     * the example invocation. Also define the return type of the `until` function.
-    *  - try to find sensible parameter names for `xxx`, `yyy` and `zzz`.
+    * - try to find sensible parameter names for `xxx`, `yyy` and `zzz`.
     */
   def until(xxx: ???, yyy: ???)(zzz: ???): ??? = ???
 

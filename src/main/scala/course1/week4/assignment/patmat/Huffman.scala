@@ -152,6 +152,8 @@ object Huffman extends App {
     * - try to find sensible parameter names for `xxx`, `yyy` and `zzz`.
     */
   def until(p: List[CodeTree] => Boolean, f: List[CodeTree] => List[CodeTree])(trees: List[CodeTree]): List[CodeTree] = {
+    //returns function List[CodeTree] : List[CodeTree]
+    //example: val tree: List[CodeTree] = until(singleton, combine)(sortedLeafs)
     if (p(trees)) trees
     else until(p, f)(f(trees))
   }
@@ -214,6 +216,7 @@ object Huffman extends App {
     * into a sequence of bits.
     */
   def encode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  //returns function ((List[Char]): List[Bit])
 
   // Part 4b: Encoding using code table
 

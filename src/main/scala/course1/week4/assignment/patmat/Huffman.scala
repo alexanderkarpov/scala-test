@@ -94,7 +94,20 @@ object Huffman extends App {
     * head of the list should have the smallest weight), where the weight
     * of a leaf is the frequency of the character.
     */
-  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = ???
+  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = {
+
+    def isort(xs: List[(Char, Int)]): List[(Char, Int)] = xs match {
+      case List() => List()
+      case y :: ys => insert(y, isort(ys))
+    }
+
+    def insert(x: (Char, Int), xs: List[(Char, Int)]): List[(Char, Int)] = xs match {
+      case List() => List(x)
+      case y :: ys => if (x._2 <= y._2) x :: xs else y :: insert(x, ys)
+    }
+
+    isort(freqs).map(a => new Leaf(a._1, a._2))
+  }
 
   /**
     * Checks whether the list `trees` contains only one single code tree.
@@ -223,9 +236,11 @@ object Huffman extends App {
 
   println(makeString(sampleTree))
 
-  val chars: List[Char] = List('a','b','c','d','a','c','f','e','f','b','b')
-
-  println(times(chars))
+  val chars: List[Char] = List('a', 'b', 'c', 'd', 'a', 'c', 'f', 'e', 'f', 'b', 'b')
+  val times: List[(Char, Int)] = times(chars)
+  println(times)
+  val sortedLeafs: List[Leaf] = makeOrderedLeafList(times)
+  println(sortedLeafs.map(leaf => makeString(leaf)))
 
 
 }

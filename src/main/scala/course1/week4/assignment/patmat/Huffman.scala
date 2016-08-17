@@ -1,7 +1,5 @@
 package course1.week4.assignment.patmat
 
-import course1.week4.assignment.common._
-
 /**
   * Assignment 4: Huffman coding
   *
@@ -126,7 +124,7 @@ object Huffman extends App {
     * If `trees` is a list of less than two elements, that list should be returned
     * unchanged.
     */
-  def combine(trees: List[CodeTree]): List[CodeTree] = //TODO: test it
+  def combine(trees: List[CodeTree]): List[CodeTree] =
     if (trees.size < 2) trees
     else {
       val first = trees.head
@@ -153,7 +151,10 @@ object Huffman extends App {
     * the example invocation. Also define the return type of the `until` function.
     * - try to find sensible parameter names for `xxx`, `yyy` and `zzz`.
     */
-  def until(xxx: ???, yyy: ???)(zzz: ???): ??? = ???
+  def until(p: List[CodeTree] => Boolean, f: List[CodeTree] => List[CodeTree])(trees: List[CodeTree]): List[CodeTree] = {
+    if (p(trees)) trees
+    else until(p, f)(f(trees))
+  }
 
   /**
     * This function creates a code tree which is optimal to encode the text `chars`.
@@ -161,7 +162,10 @@ object Huffman extends App {
     * The parameter `chars` is an arbitrary text. This function extracts the character
     * frequencies from that text and creates a code tree based on them.
     */
-  def createCodeTree(chars: List[Char]): CodeTree = ???
+  def createCodeTree(chars: List[Char]): CodeTree = {
+    if (chars.isEmpty) throw new IllegalArgumentException
+    until(singleton, combine)(makeOrderedLeafList(times(chars))).head
+  }
 
 
   // Part 3: Decoding
@@ -244,11 +248,18 @@ object Huffman extends App {
 
   println(makeString(sampleTree))
 
-  val chars: List[Char] = List('a', 'b', 'c', 'd', 'a', 'c', 'f', 'e', 'f', 'b', 'b')
+  val chars: List[Char] = List('a', 'b', 'c', 'd', 'a', 'c', 'f', 'e', 'f', 'b', 'b', 'e')
   val times: List[(Char, Int)] = times(chars)
   println(times)
   val sortedLeafs: List[Leaf] = makeOrderedLeafList(times)
   println(sortedLeafs.map(leaf => makeString(leaf)))
+  var combined = combine(sortedLeafs)
+  println(combined.map(leaf => makeString(leaf)))
+
+  val tree: List[CodeTree] = until(singleton, combine)(sortedLeafs)
+  println(tree.map(leaf => makeString(leaf)))
+
+  println(makeString(createCodeTree(chars)))
 
 
 }

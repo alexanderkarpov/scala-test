@@ -177,18 +177,15 @@ object Huffman extends App {
     * the resulting list of characters.
     */
   def decode(tree: CodeTree, bits: List[Bit]): List[Char] = {
-
-    //FIXME: something goes wrong here
-    def loop(tree: CodeTree, bits: List[Bit], acc: List[Char]): List[Char] = tree match {
-      case Leaf(ch, _) => acc ::: List[Char](ch)
-      case Fork(left, right, _, _) =>
-      if (bits.isEmpty) throw new IllegalStateException("not enough bits")
-        else if (bits.head == 0) loop(left, bits.tail, acc)
-        else loop(right, bits.tail, acc)
+    def traverse(remainingTree: CodeTree, remainingBits: List[Bit]): List[Char] = remainingTree match {
+      case Leaf(ch, _) if remainingBits.isEmpty => List(ch)
+      case Leaf(ch, _) => ch :: traverse(tree, remainingBits)
+      case Fork(_, _, _, _) if remainingBits.isEmpty => throw new IllegalStateException("not enough bits for decoding")
+      case Fork(left, _, _, _) if remainingBits.head == 0 => traverse(left, remainingBits.tail)
+      case Fork(_, right, _, _) => traverse(right, remainingBits.tail)
     }
 
-
-    loop(tree, bits, List())
+    traverse(tree, bits)
   }
 
   /**

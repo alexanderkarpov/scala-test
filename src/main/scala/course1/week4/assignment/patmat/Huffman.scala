@@ -229,22 +229,8 @@ object Huffman extends App {
     * into a sequence of bits.
     */
   def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
-
-    def traverse(remainingTree: CodeTree, acc: List[Bit])(remainingText: List[Char]): List[Bit] = remainingTree match {
-      case Leaf(_, _) if remainingText.isEmpty => acc
-      case Leaf(_, _) => ???
-    }
-
-
-    traverse(tree, List())(text)
-
+    text.flatMap(ch => trackOfChar(tree, ch))
   }
-
-  //returns function ((List[Char]): List[Bit])
-  /*
-      if (p(trees)) trees
-    else until(p, f)(f(trees))
-   */
 
   // Part 4b: Encoding using code table
 
@@ -305,8 +291,12 @@ object Huffman extends App {
   println(decodedSecret.mkString(""))
 
 
-  val bits = trackOfChar(tree.head, 'a')
+  val bits = trackOfChar(tree.head, 'f')
   println(bits)
+
+  //00110001
+  val encoded = encode(tree.head)(List('a', 'b', 'f'))
+  println(encoded)
 
 
 }

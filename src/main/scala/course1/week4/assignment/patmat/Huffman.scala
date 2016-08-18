@@ -125,13 +125,13 @@ object Huffman extends App {
     * unchanged.
     */
   def combine(trees: List[CodeTree]): List[CodeTree] =
-    if (trees.size < 2) trees
-    else {
-      val first = trees.head
-      val second = trees.tail.head
-      val fork = new Fork(left = first, right = second, chars = chars(first) ::: chars(second), weight = weight(first) + weight(second))
-      fork :: trees.tail.tail
-    }
+  if (trees.size < 2) trees
+  else {
+    val first = trees.head
+    val second = trees.tail.head
+    val fork = new Fork(left = first, right = second, chars = chars(first) ::: chars(second), weight = weight(first) + weight(second))
+    fork :: trees.tail.tail
+  }
 
 
   /**
@@ -211,12 +211,40 @@ object Huffman extends App {
 
   // Part 4a: Encoding using Huffman tree
 
+  def trackOfChar(tree: CodeTree, char: Char): List[Bit] = {
+
+    def traverse(remainingTree: CodeTree, acc: List[Bit]): List[Bit] = remainingTree match {
+      case Leaf(ch, _) if char == ch => acc
+      case Leaf(_, _) => List()
+      case Fork(left, right, chars, _) if chars.contains(char) =>
+        traverse(left, acc ::: List(0)) ::: traverse(right, acc ::: List(1))
+      case Fork(_, _, _, _) => List()
+    }
+
+    traverse(tree, List())
+  }
+
   /**
     * This function encodes `text` using the code tree `tree`
     * into a sequence of bits.
     */
-  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
+
+    def traverse(remainingTree: CodeTree, acc: List[Bit])(remainingText: List[Char]): List[Bit] = remainingTree match {
+      case Leaf(_, _) if remainingText.isEmpty => acc
+      case Leaf(_, _) => ???
+    }
+
+
+    traverse(tree, List())(text)
+
+  }
+
   //returns function ((List[Char]): List[Bit])
+  /*
+      if (p(trees)) trees
+    else until(p, f)(f(trees))
+   */
 
   // Part 4b: Encoding using code table
 
@@ -275,6 +303,10 @@ object Huffman extends App {
   println(makeString(createCodeTree(chars)))
 
   println(decodedSecret.mkString(""))
+
+
+  val bits = trackOfChar(tree.head, 'a')
+  println(bits)
 
 
 }

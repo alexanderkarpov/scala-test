@@ -14,7 +14,7 @@ object MergeSort extends App {
 
   def msort(xs: List[Int]): List[Int] = {
     val n = xs.length / 2
-    if(n == 0) xs
+    if (n == 0) xs
     else {
       def merge(xs: List[Int], ys: List[Int]): List[Int] = xs match {
         case Nil => ys
@@ -31,6 +31,6 @@ object MergeSort extends App {
   }
 
 
-  println(msort(List(3,6,3,756,3444,73,23,64,710,3,0,1,-9,-53,-32,64)))
+  println(msort(List(3, 6, 3, 756, 3444, 73, 23, 64, 710, 3, 0, 1, -9, -53, -32, 64)))
 
 }

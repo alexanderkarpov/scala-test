@@ -44,12 +44,8 @@ object HigherOrderListFunctions extends App {
 
   println(pack(list))
 
-  def encode[T](xs: List[T]): List[(T, Int)] = xs match {
-    case Nil => Nil
-    case y :: ys => {
-      val (firstList, secondList) = xs.span(x => x.equals(y))
-      (y, firstList.length) :: encode(secondList)
-    }
+  def encode[T](xs: List[T]): List[(T, Int)] =   {
+    pack(xs) map(list => (list.head, list.length))
   }
 
   println(encode(list))

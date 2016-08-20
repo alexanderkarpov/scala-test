@@ -28,8 +28,10 @@ object MergeSort extends App {
     }
   }
 
-  //  def readyToSort = msort(List(3, 6, 3, 756, 3444, 73, 23, 64, 710, 3, 0, 1, -9, -53, -32, 64));
+  val num = List(3, 6, 3, 756, 3444, 73, 23, 64, 710, 3, 0, 1, -9, -53, -32, 64);
+  val fruits = List("apple", "pineapple", "orange", "banana")
 
-  println(msort(List(3, 6, 3, 756, 3444, 73, 23, 64, 710, 3, 0, 1, -9, -53, -32, 64))((x, y) => x < y))
+  println(msort(num)((x, y) => x < y))
+  println(msort(fruits)((x: String, y: String) => x.compareTo(y) < 0))
 
 }

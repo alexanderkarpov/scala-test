@@ -12,6 +12,19 @@ package course1.week5.lecture2
   */
 object MergeSort extends App {
 
+  /*
+  Say, a function takes an implicit parameter of a type T
+  Compiler will search an implicit definition that
+    - is marked implicit
+    - has type compatible with T
+    - is visible at the point of the function call,
+      or is defined as a companion object associated with T
+
+  If there is a single (most specific) definition, it will be taken as
+  actual argument for the implicit parameter
+
+  Otherwise it's an error
+   */
   def msort[T](xs: List[T])(implicit ord: Ordering[T]): List[T] = {
     val n = xs.length / 2
     if (n == 0) xs

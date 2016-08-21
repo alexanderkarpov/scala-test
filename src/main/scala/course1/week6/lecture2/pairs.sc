@@ -15,8 +15,8 @@ object pairs {
   } yield (i, j)
 
 
-  def scalarProduct(xs: List[Double], ys: List[Double]) : Double =
-    (for((x,y) <- xs zip ys) yield x*y).sum
+  def scalarProduct(xs: List[Double], ys: List[Double]): Double =
+    (for ((x, y) <- xs zip ys) yield x * y).sum
 
 
 }

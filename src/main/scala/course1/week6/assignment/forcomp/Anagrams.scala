@@ -1,4 +1,4 @@
-package course1.week5.assignment.forcomp
+package course1.week6.assignment.forcomp
 
 
 object Anagrams {

@@ -1,4 +1,4 @@
-package course1.week5.assignment
+package course1.week6.assignment
 
 
 import java.io.File

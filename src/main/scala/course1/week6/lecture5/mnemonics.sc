@@ -26,5 +26,19 @@ object mnemonics {
     * e.g. "5282" -> List("Java", "Kata", "Lava", ...)
     * A missing number return an empty set
     */
-  val wordsForNum: Map[String, Seq[String]] = words groupBy wordCode
+  val wordsForNum: Map[String, Seq[String]] = words groupBy wordCode withDefaultValue Seq()
+
+  def encode(number: String): Set[List[String]] =
+    if(number.isEmpty) Set(List())
+    else {
+      for {
+        split <- 1 to number.length
+        word <- wordsForNum(number take split)
+        rest <- encode(number drop split)
+      } yield word :: rest
+    }.toSet
+
+  def translate(number: String): Set[String] =
+    encode(number) map (_ mkString " ")
+
 }

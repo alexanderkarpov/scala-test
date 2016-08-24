@@ -1,7 +1,16 @@
 package course1.week6.assignment
 
+import scala.io.Source
+
 package object forcomp {
-  val dictionaryPath = List("forcomp", "linuxwords.txt")
+
+  val source = Source.fromFile("forcomp/linuxwords.txt")
+  val lines = try source.getLines.toList finally source.close()
+
+
+  def loadDictionary = lines
+  /*
+    val dictionaryPath = List("forcomp", "linuxwords.txt")
 
   def loadDictionary = {
     val wordstream = Option {
@@ -22,5 +31,6 @@ package object forcomp {
       wordstream.close()
     }
   }
+   */
 
 }

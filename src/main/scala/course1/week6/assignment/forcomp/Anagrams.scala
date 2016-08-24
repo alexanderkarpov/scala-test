@@ -1,7 +1,7 @@
 package course1.week6.assignment.forcomp
 
 
-object Anagrams {
+object Anagrams extends App {
 
   /** A word is simply a `String`. */
   type Word = String
@@ -34,7 +34,10 @@ object Anagrams {
     *
     * Note: you must use `groupBy` to implement this method!
     */
-  def wordOccurrences(w: Word): Occurrences = ???
+  def wordOccurrences(w: Word): Occurrences = w.toLowerCase.toCharArray.toList.
+    groupBy(ch => ch).map(p => (p._1, p._2.length)).toList
+
+  //type Occurrences = List[(Char, Int)]
 
   /** Converts a sentence into its character occurrence list. */
   def sentenceOccurrences(s: Sentence): Occurrences = ???
@@ -136,4 +139,7 @@ object Anagrams {
     * Note: There is only one anagram of an empty sentence.
     */
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+
+  //TODO: remove all after this comments
+  println(wordOccurrences("PrevEd"))
 }

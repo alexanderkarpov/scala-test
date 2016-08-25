@@ -25,7 +25,8 @@ object Anagrams extends App {
   /** The dictionary is simply a sequence of words.
     * It is predefined and obtained as a sequence using the utility method `loadDictionary`.
     */
-  val dictionary: List[Word] = loadDictionary
+  //val dictionary: loadDictionary
+  val dictionary: List[Word] = List("ate", "eat", "tea", "love", "olive", "preved", "medved")
 
   /** Converts the word into its character occurrence list.
     *
@@ -35,12 +36,13 @@ object Anagrams extends App {
     * Note: you must use `groupBy` to implement this method!
     */
   def wordOccurrences(w: Word): Occurrences = w.toLowerCase.toCharArray.toList.
-    groupBy(ch => ch).map(p => (p._1, p._2.length)).toList
+    groupBy(ch => ch).map(p => (p._1, p._2.length)).toList.sorted
 
   //type Occurrences = List[(Char, Int)]
 
   /** Converts a sentence into its character occurrence list. */
-  def sentenceOccurrences(s: Sentence): Occurrences = ???
+  def sentenceOccurrences(s: Sentence): Occurrences = wordOccurrences(s.mkString)
+
 
   /** The `dictionaryByOccurrences` is a `Map` from different occurrences to a sequence of all
     * the words that have that occurrence count.
@@ -57,10 +59,12 @@ object Anagrams extends App {
     * List(('a', 1), ('e', 1), ('t', 1)) -> Seq("ate", "eat", "tea")
     *
     */
-  lazy val dictionaryByOccurrences: Map[Occurrences, List[Word]] = ???
+  lazy val dictionaryByOccurrences: Map[Occurrences, List[Word]] = {
+    dictionary.groupBy(wordOccurrences) withDefaultValue List()
+  }
 
   /** Returns all the anagrams of a given word. */
-  def wordAnagrams(word: Word): List[Word] = ???
+  def wordAnagrams(word: Word): List[Word] = dictionaryByOccurrences(wordOccurrences(word))
 
   /** Returns the list of all subsets of the occurrence list.
     * This includes the occurrence itself, i.e. `List(('k', 1), ('o', 1))`
@@ -142,4 +146,11 @@ object Anagrams extends App {
 
   //TODO: remove all after this comments
   println(wordOccurrences("PrevEd"))
+  println(sentenceOccurrences(List("PrevEd", "Medved")))
+
+  val list = List('a', 'b', 'c', 'a', 'c')
+
+  println(list.groupBy(ch => "symbol " + ch))
+
+  println(dictionaryByOccurrences)
 }

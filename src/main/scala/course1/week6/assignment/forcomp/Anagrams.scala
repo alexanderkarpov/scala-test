@@ -26,7 +26,7 @@ object Anagrams extends App {
     * It is predefined and obtained as a sequence using the utility method `loadDictionary`.
     */
   //val dictionary: loadDictionary
-  val dictionary: List[Word] = List("ate", "eat", "tea", "love", "olive", "preved", "medved")
+  val dictionary: List[Word] = List("ate", "eat", "tea", "love", "olive", "preved", "medved", "oval", "ovel")
 
   /** Converts the word into its character occurrence list.
     *
@@ -153,4 +153,5 @@ object Anagrams extends App {
   println(list.groupBy(ch => "symbol " + ch))
 
   println(dictionaryByOccurrences)
+  println(wordAnagrams("ovel"))
 }

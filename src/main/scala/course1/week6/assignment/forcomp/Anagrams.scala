@@ -88,7 +88,15 @@ object Anagrams extends App {
     * Note that the order of the occurrence list subsets does not matter -- the subsets
     * in the example above could have been displayed in some other order.
     */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def combinations(occurrences: Occurrences): List[Occurrences] =
+  (occurrences foldRight List[Occurrences](Nil)) {
+    case ((ch, tm), acc) => {
+      acc ++ (for {comb <- acc; n <- 1 to tm} yield (ch, n) :: comb)
+    }
+  }
+
+
+
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
     *
@@ -154,4 +162,29 @@ object Anagrams extends App {
 
   println(dictionaryByOccurrences)
   println(wordAnagrams("ovel"))
+
+  val digits: List[Int] = List(2, 2)
+  /*
+  0 0
+  0 1
+  0 2
+  1 0
+  1 1
+  1 2
+  2 0
+  2 1
+  2 2
+   */
+  println("------------------")
+
+  combinations(List(('a', 2), ('b', 2))).foreach(println)
+
+
+
+  //  for (d <- digits) {
+  //    for (i <- (0 to d)) printf("%2d", i)
+  //    println
+  //  }
+
+
 }

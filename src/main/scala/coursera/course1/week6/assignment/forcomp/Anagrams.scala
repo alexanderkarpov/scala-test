@@ -96,8 +96,6 @@ object Anagrams extends App {
   }
 
 
-
-
   /** Subtracts occurrence list `y` from occurrence list `x`.
     *
     * The precondition is that the occurrence list `y` is a subset of
@@ -108,7 +106,11 @@ object Anagrams extends App {
     * Note: the resulting value is an occurrence - meaning it is sorted
     * and has no zero-entries.
     */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+    // x-y
+    val yMap: Map[Char, Int] = y.toMap
+    x.map(occ => (occ._1, occ._2 - yMap(occ._1))).filter(occ => occ._2 > 0).sorted
+  }
 
   /** Returns a list of all anagram sentences of the given sentence.
     *
@@ -150,7 +152,19 @@ object Anagrams extends App {
     *
     * Note: There is only one anagram of an empty sentence.
     */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    def iter(occurrences: Occurrences): List[Sentence] = {
+      if (occurrences.isEmpty) List(Nil)
+      else for {
+        combination <- combinations(occurrences)
+        word <- dictionaryByOccurrences getOrElse(combination, Nil)
+        sentence <- iter(subtract(occurrences, wordOccurrences(word)))
+        if !combination.isEmpty
+      } yield word :: sentence
+    }
+
+    iter(sentenceOccurrences(sentence))
+  }
 
   //TODO: remove all after this comments
   println(wordOccurrences("PrevEd"))
@@ -185,6 +199,12 @@ object Anagrams extends App {
   //    for (i <- (0 to d)) printf("%2d", i)
   //    println
   //  }
+
+  println("=====================")
+  val x: Occurrences = List(('a', 3), ('b', 4), ('c', 5))
+  val y: Occurrences = List(('a', 2), ('b', 3), ('c', 4))
+
+  println(subtract(x, y))
 
 
 }

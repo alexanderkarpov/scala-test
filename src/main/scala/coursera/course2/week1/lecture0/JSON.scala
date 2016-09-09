@@ -1,4 +1,4 @@
-package coursera.course2.week1.lesson2
+package coursera.course2.week1.lecture0
 
 
 abstract class JSON

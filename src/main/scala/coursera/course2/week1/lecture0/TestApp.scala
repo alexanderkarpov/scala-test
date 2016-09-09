@@ -1,4 +1,4 @@
-package coursera.course2.week1.lesson2
+package coursera.course2.week1.lecture0
 
 object TestApp extends App {
   val data = JObj(Map(
@@ -38,7 +38,7 @@ object TestApp extends App {
 
   println(show(data))
 
-//  val f =  String => String =   ...
+  //  val f =  String => String =   ...
   val f: PartialFunction[String, String] = {
     case "ping" => "pong"
     case "pong" => "ping"
@@ -47,5 +47,19 @@ object TestApp extends App {
   println(f("ping"))
   println(f("pong"))
   println(f.isDefinedAt("ping"))
+
+
+  def findPrimes(n: Int): Iterable[(Int, Int)] = {
+    def isPrime(n: Int): Boolean = (2 until n).forall(x => n % x != 0)
+
+    for {i <- 1 until n
+         j <- 1 to n
+         if (isPrime(i + j))} yield (i, j)
+    //actually returns Vector
+  }
+
+  println(findPrimes(10))
+
+
 
 }

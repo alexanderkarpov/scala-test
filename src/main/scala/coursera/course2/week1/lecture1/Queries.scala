@@ -61,6 +61,8 @@ object Queries extends App {
 
   println(transRes)
 
+  //TODO: clarify distinguishes between filter and withFilter
+
 
   //Lecture 1.3
   //Functional Random Generators
@@ -109,7 +111,7 @@ object Queries extends App {
   }
 
   def booleans = new Generator[Boolean] {
-    override def generate: Boolean = integers.generate > 0
+    override def generate: Boolean = integers.generate > -10
   }
 
   def abs(x: Int): Int = if (x < 0) x * (-1) else x
@@ -136,17 +138,37 @@ object Queries extends App {
   } yield head :: tail
 
 
+  def randomList = lists.generate
+
+  println(randomList)
+  println(randomList)
+  println(randomList)
+  println(randomList)
+
 
   trait Tree {}
 
-  case class Inner(left: Tree, right: Tree) extends Tree
+  case class Inner(left: Tree, right: Tree) extends Tree {
+    override def toString: String = "[" + left + "," + right + "]"
+  }
 
-  case class Leaf(x: Int) extends Tree
+  case class Leaf(x: Int) extends Tree {
+    override def toString: String = x.toString
+  }
 
-  def leafs: Generator[Leaf] = ???
+  def leafs: Generator[Leaf] = single(Leaf(integers.generate))
 
-  def inners: Generator[Inner] = ???
+  def inners: Generator[Inner] = new Generator[Inner] {
+    override def generate: Inner = Inner(trees.generate, trees.generate)
+  }
 
-  def trees: Generator[Tree] = ???
+  def trees: Generator[Tree] = for {
+    isLeaf <- booleans
+    tree <- if (isLeaf) leafs else inners
+  } yield tree
+
+  println("TREES: " + trees.generate)
+  println("TREES: " + trees.generate)
+  println("TREES: " + trees.generate)
 
 }

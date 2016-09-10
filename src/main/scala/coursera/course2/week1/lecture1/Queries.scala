@@ -1,5 +1,7 @@
 package coursera.course2.week1.lecture1
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.LeafPropertyXsiLoader
+
 case class Book(title: String, authors: List[String])
 
 object Queries extends App {
@@ -156,11 +158,18 @@ object Queries extends App {
     override def toString: String = x.toString
   }
 
-  def leafs: Generator[Leaf] = single(Leaf(integers.generate))
+  def leafs: Generator[Leaf] = for {
+    x <- integers
+  } yield Leaf(x)
+  //single(Leaf(integers.generate))
 
-  def inners: Generator[Inner] = new Generator[Inner] {
-    override def generate: Inner = Inner(trees.generate, trees.generate)
-  }
+  def inners: Generator[Inner] = for {
+    l <- trees
+    r <- trees
+  } yield Inner(l, r)
+  //  def inners: Generator[Inner] = new Generator[Inner] {
+//    override def generate: Inner = Inner(trees.generate, trees.generate)
+//  }
 
   def trees: Generator[Tree] = for {
     isLeaf <- booleans

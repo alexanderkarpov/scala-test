@@ -1,10 +1,8 @@
 package coursera.course2.week1.lecture1
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.LeafPropertyXsiLoader
-
 case class Book(title: String, authors: List[String])
 
-object Queries extends App {
+object QueriesAndGenerators extends App {
 
   //Lecture 1.1
   //Queries with FOR
@@ -161,15 +159,17 @@ object Queries extends App {
   def leafs: Generator[Leaf] = for {
     x <- integers
   } yield Leaf(x)
+
   //single(Leaf(integers.generate))
 
   def inners: Generator[Inner] = for {
     l <- trees
     r <- trees
   } yield Inner(l, r)
+
   //  def inners: Generator[Inner] = new Generator[Inner] {
-//    override def generate: Inner = Inner(trees.generate, trees.generate)
-//  }
+  //    override def generate: Inner = Inner(trees.generate, trees.generate)
+  //  }
 
   def trees: Generator[Tree] = for {
     isLeaf <- booleans
@@ -179,5 +179,13 @@ object Queries extends App {
   println("TREES: " + trees.generate)
   println("TREES: " + trees.generate)
   println("TREES: " + trees.generate)
+
+  def test[T](g: Generator[T], numTimes: Int = 100)(test: T => Boolean): Unit = {
+    for (i <- 0 until numTimes) {
+      val value = g.generate
+      assert(test(value), "Test failed for " + value)
+    }
+    println("Passed " + numTimes + " tests")
+  }
 
 }

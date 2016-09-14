@@ -5,7 +5,7 @@ package coursera.course2.week2.lecture2.water
   */
 object PouringTest extends App {
 
-  val problem = new Pouring(Vector(4, 7))
+  val problem = new Pouring(Vector(4, 9))
   val moves = problem.moves
   val pathSets = problem.pathSets.take(3).toList
 

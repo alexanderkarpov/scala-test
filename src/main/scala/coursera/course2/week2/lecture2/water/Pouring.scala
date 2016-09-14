@@ -43,6 +43,30 @@ class Pouring(capacity: Vector[Int]) {
 //      case move :: xs1 => move change trackState(xs1)
 //    }
 
+    def extend(move: Move) = new Path(move :: history)
+
+    override def toString: String = (history.reverse mkString " ") + "--> " + endState
   }
 
+  val initialPath = new Path(Nil)
+
+  def from(paths: Set[Path]): Stream[Set[Path]] =
+    if (paths.isEmpty) Stream.empty
+    else {
+      val more = for {
+        path <- paths
+        next <- moves map path.extend
+      } yield next
+
+      paths #:: from(more)
+    }
+
+  val pathSets = from(Set(initialPath))
+
+  def solutions(target: Int): Stream[Path] =
+    for {
+      pathSet <- pathSets
+      path <- pathSet
+      if path.endState contains target
+    } yield path
 }

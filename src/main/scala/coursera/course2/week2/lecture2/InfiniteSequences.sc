@@ -1,6 +1,6 @@
 object InfiniteSequences {
 
-  def from(n: Int):Stream[Int] = n #:: from(n + 1)
+  def from(n: Int): Stream[Int] = n #:: from(n + 1)
 
   from(10).take(10).toList
 
@@ -9,11 +9,12 @@ object InfiniteSequences {
 
   /**
     * finds prime numbers in the stream
+    *
     * @param s
     * @return
     */
   def sieve(s: Stream[Int]): Stream[Int] = {
-    if(s.head < 2) throw new IllegalArgumentException
+    if (s.head < 2) throw new IllegalArgumentException
     s.head #:: sieve(s.tail filter (_ % s.head != 0))
   }
 
@@ -29,4 +30,11 @@ object InfiniteSequences {
   }
 
   sqrtStream(25).take(10).toList
+  sqrtStream(49).take(10).toList
+
+  def isGoodEnough(guess: Double, x: Double): Boolean =
+    math.abs((guess * guess - x) / x) < 0.0000000000001
+
+  sqrtStream(64).filter(isGoodEnough(_, 64)).take(10).toList
+  sqrtStream(64).take(10).toList
 }

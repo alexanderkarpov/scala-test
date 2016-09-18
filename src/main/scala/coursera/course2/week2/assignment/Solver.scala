@@ -1,6 +1,5 @@
 package coursera.course2.week2.assignment
 
-import common._
 
 /**
  * This component implements the solver for the Bloxorz game

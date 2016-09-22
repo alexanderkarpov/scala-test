@@ -25,25 +25,21 @@ object BinomialTheorem {
 
   }
 
-  (0 until 5).foreach(n => println(s"$n: ${pascalTriangle(n).mkString(", ")}"))
+  case class Summand(coef: Int, powA: Int, powB: Int)
 
-  def expand(a: String, b: String, n: Int): String = {
-    val coefs = pascalTriangle(n);
-    def coef(i: Int) = {
-      val n = coefs(i)
-      if(n > 1) s"$n * " else ""
-    }
-    def power(x: String, p: Int): String = {
-      if(p == 0) "1"
-      else if(p == 1) s"$x"
-      else s"$x^$p"
-    }
-    val res = for(i <- 0 to n) yield s"${coef(i)}${power(a, n-i)} * ${power(b, i)}"
-
-    s"($a + $b)^$n = " + res.toList.mkString(" + ")
+  def expand(n: Int): List[Summand] = {
+    val coefs = pascalTriangle(n)
+    val res = for(i <- 0 to n) yield Summand(coefs(i), n - i, i)
+    res.toList
   }
 
-  expand("x","y",4)
+  val summands = expand(30)
+
+  val b = Math.sqrt(2)
+  val xCoefPower = summands.map(s => (s.coef * Math.pow(b, s.powB), s.powA ))
+
+  val sorted = xCoefPower.sortBy(_._1)
+  sorted.last._2
   
  
 

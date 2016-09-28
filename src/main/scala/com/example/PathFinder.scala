@@ -7,18 +7,26 @@ object PathFinder extends App {
 
     def loop(node: TreeNode, acc: Double): Double = {
       if(node == null) acc
-      else loop(node.leftNode, node.weight) + loop(node.middleNode, 0.0) + loop(node.rightNode, acc)
+      else node.nodes match {
+        case Nil => node.weight + acc
+        case head::Nil => loop(head, node.weight) + acc
+        case head::tail => {
+          val headNodeWeight = loop(head, node.weight)
+          val middleNodesWeights: List[Double] = (for(i <- (0 until tail.length - 1)) yield loop(tail(i), 0.0)).toList
+          val lastNodeWeight = loop(tail.last, acc)
+          headNodeWeight + middleNodesWeights.sum + lastNodeWeight
+        }
+      }
     }
 
     loop(root, 0.0)
   }
 
-  val smallTree = TreeNode(1,
-    TreeNode(1, TreeNode(5, null, TreeNode(5, null, null, null), null), TreeNode(10, null, TreeNode(1, null, null, null), TreeNode(1, null, null, null)), null),
-    TreeNode(1, TreeNode(1, null, TreeNode(1, null, null, null), null), TreeNode(1, null, TreeNode(1, null, TreeNode(1, null, null, null), null), null), TreeNode(1, null, null, null)),
-    TreeNode(1, TreeNode(1, TreeNode(5, null, null, null), TreeNode(5, null, TreeNode(5, null, null, null), null), null), TreeNode(1, null, null, null), TreeNode(1, null, TreeNode(5, null, null, null), null)));
+ def Node(weight: Double, children: TreeNode*) = TreeNode(weight, children.toList)
 
-  println(totalWeight(smallTree))
+  val tree = Node(1, Node(2, Node(3), Node(3), Node(3), Node(3)), Node(2, Node(3), Node(3)), Node(2, Node(3), Node(2)))
+
+  println(totalWeight(tree))
 
 //  val smallTree = TreeNode(1, TreeNode(1, null, null), TreeNode(1, null, null))
 //  println(totalWeight(smallTree))
@@ -30,10 +38,8 @@ object PathFinder extends App {
 
 }
 
-case class TreeNode(weight: Double, leftNode: TreeNode, middleNode: TreeNode, rightNode: TreeNode) {
-  def hasLeftNode = leftNode != null
-
-  def hasRightNode = rightNode != null
+case class TreeNode(weight: Double, nodes: List[TreeNode]) {
+  def this(weight: Double) = this(weight, Nil)
 }
 
 case class CheckPoint(id: Long, nextId: Long, weight: Double)

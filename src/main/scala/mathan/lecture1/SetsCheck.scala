@@ -1,5 +1,8 @@
-object Sets {
+package mathan.lecture1
 
+import org.scalacheck.Prop.forAll
+
+object SetsCheck extends App {
 
   def intersection[T](a: Set[T], b: Set[T]) = a.filter(e => b.contains(e))
 
@@ -7,7 +10,7 @@ object Sets {
 
   def subtraction[T](a: Set[T], b: Set[T]) = a.filter(e => !b.contains(e))
 
-  def mult[T](a: Set[T], b: Set[T]): Set[(T,T)] =
+  def mult[T](a: Set[T], b: Set[T]): Set[(T, T)] =
     for {
       x <- a
       y <- b
@@ -15,26 +18,7 @@ object Sets {
 
   def isSubset[T](a: Set[T], b: Set[T]): Boolean = a.forall(b.contains)
 
-  mult(Set(0,1,2), Set(3,4))
-
-
-//  val a = Set(1, 2)
-//  val b = Set(3, 2)
-//  val c = Set(4, 2)
-//  val d = Set(5, 2)
-
-//  val a: Set[Int] = Set()
-//  val b: Set[Int] = Set()
-//  val c: Set[Int] = Set()
-//  val d: Set[Int] = Set()
-
-    val a: Set[Int] = Set(0)
-    val b: Set[Int] = Set(0)
-    val c: Set[Int] = Set(0, -100500)
-    val d: Set[Int] = Set(-100500)
-
-
-  val opt1 = isSubset(
+  def opt1[T](a: Set[T], b: Set[T], c: Set[T], d: Set[T]) = isSubset(
     intersection(
       subtraction(a, c),
       subtraction(b, d)),
@@ -44,7 +28,7 @@ object Sets {
     )
   )
 
-  val opt2 = isSubset(
+  def opt2[T](a: Set[T], b: Set[T], c: Set[T], d: Set[T]) = isSubset(
     subtraction(
       intersection(a, c),
       intersection(b, d)
@@ -54,7 +38,7 @@ object Sets {
       subtraction(b, d))
   )
 
-  val opt3 = isSubset(
+  def opt3[T](a: Set[T], b: Set[T], c: Set[T], d: Set[T]) = isSubset(
     union(
       subtraction(a, c),
       subtraction(b, d)),
@@ -64,7 +48,7 @@ object Sets {
     )
   )
 
-  val opt4 = isSubset(
+  def opt4[T](a: Set[T], b: Set[T], c: Set[T], d: Set[T]) = isSubset(
     subtraction(
       union(a, c),
       union(b, d)
@@ -74,9 +58,12 @@ object Sets {
       subtraction(b, d))
   )
 
-val opt5 = intersection(mult(a,c), mult(b,d)) ==
-  mult(intersection(a,c), intersection(b,d))
+  def opt5[T](a: Set[T], b: Set[T], c: Set[T], d: Set[T]) = intersection(mult(a,c), mult(b,d)) ==
+    mult(intersection(a,c), intersection(b,d))
 
+  val propOpt = forAll { (a: Set[Int], b: Set[Int], c: Set[Int], d: Set[Int]) =>
+    opt5(a, b, c, d)
+  }
+  propOpt.check
 
-  mult(a,c)
 }

@@ -26,9 +26,9 @@ object PathFinder extends App {
 
   def getAllPaths(root: TreeNode): Set[List[TreeNode]] = {
 
-    def loop(node: TreeNode, acc: Set[List[TreeNode]]): Set[List[TreeNode]] = ???
+    def loop(node: TreeNode, acc: Set[List[TreeNode]], currentPath: List[TreeNode]): Set[List[TreeNode]] = ???
 
-    loop(root, Set())
+    loop(root, Set(), List())
 
   }
 

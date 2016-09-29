@@ -47,11 +47,13 @@ object PathFinder extends App {
 
   type Path = List[CheckPoint]
 
-  def getAllPaths(fromId: Long, toId: Long, checkPoints: List[CheckPoint]): List[Path] = {
+  def getAllPaths(fromId: Long, toId: Long, checkPoints: List[CheckPoint]): Set[Path] = {
 
     val possibleMoves: Map[Long, List[CheckPoint]] = checkPoints.groupBy(_.id) withDefaultValue Nil
 
-    def loop(point: CheckPoint, acc: List[Path], currentPath: Path): List[Path] = {
+
+
+    def loop(point: CheckPoint, acc: List[Path], currentPath: Path, exploredInCurrentPath: Set[CheckPoint]): List[Path] = {
       if (point == null) {
         currentPath match {
           case Nil => acc
@@ -61,25 +63,24 @@ object PathFinder extends App {
       }
       else
         possibleMoves(point.nextId) match {
-          case Nil => loop(null, acc, currentPath ::: List(point))
+          case Nil => loop(null, acc, currentPath ::: List(point), exploredInCurrentPath)
           case nextPoints =>
-            if (point.nextId == toId) loop(null, acc, currentPath ::: List(point))
+            if (point.nextId == toId) loop(null, acc, currentPath ::: List(point), exploredInCurrentPath)
             else {
-              val path = currentPath ::: List(point)
-              val listOfLists: List[List[Path]] = nextPoints.map(nextPoint => loop(nextPoint, acc, path))
-              (listOfLists foldRight List[Path]()) ((a, b) => a ::: b)
+              if(exploredInCurrentPath.contains(point)) loop(null, acc, currentPath ::: List(point), exploredInCurrentPath)
+              else {
+                val path = currentPath ::: List(point)
+                val listOfLists: List[List[Path]] = nextPoints.map(nextPoint => loop(nextPoint, acc, path, exploredInCurrentPath + point))
+                (listOfLists foldRight List[Path]()) ((a, b) => a ::: b)
+              }
             }
-
-
         }
-
-
     }
 
     val possibleStartPoints = possibleMoves(fromId)
 
-    val listOfResults: List[List[Path]] = possibleStartPoints.map(startPoint => loop(startPoint, Nil, Nil))
-    (listOfResults foldRight List[Path]()) ((a, b) => a ::: b)
+    val listOfResults: List[List[Path]] = possibleStartPoints.map(startPoint => loop(startPoint, Nil, Nil, Set()))
+    ((listOfResults foldRight List[Path]()) ((a, b) => a ::: b)).toSet
 
   }
 
@@ -127,6 +128,13 @@ object PathFinder extends App {
   printPath(1, 4, points1)
   printPath(1, 2, points1)
 
+  val points3 = points1 ::: List(CheckPoint(3, 2, 90))
+  println("============")
+  printPath(1, 4, points3)
+
+  val points4 = List(CheckPoint(1, 2, 10), CheckPoint(2, 3, 20), CheckPoint(3, 4, 30), CheckPoint(3, 4, 40),  CheckPoint(0, 5, 50))
+  printPath(1, 4, points4) //TODO: this returns two similar paths - need to be investigated
+  printPath(1, 2, points4)
 
 }
 

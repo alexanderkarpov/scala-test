@@ -62,11 +62,15 @@ object PathFinder extends App {
       else
         possibleMoves(point.nextId) match {
           case Nil => loop(null, acc, currentPath ::: List(point))
-          case nextPoints => {
-            val path = currentPath ::: List(point)
-            val listOfLists: List[List[Path]] = nextPoints.map(nextPoint => loop(nextPoint, acc, path))
-            (listOfLists foldRight List[Path]()) ((a, b) => a ::: b)
-          }
+          case nextPoints =>
+            if (point.nextId == toId) loop(null, acc, currentPath ::: List(point))
+            else {
+              val path = currentPath ::: List(point)
+              val listOfLists: List[List[Path]] = nextPoints.map(nextPoint => loop(nextPoint, acc, path))
+              (listOfLists foldRight List[Path]()) ((a, b) => a ::: b)
+            }
+
+
         }
 
 
@@ -111,6 +115,7 @@ object PathFinder extends App {
 
   def printPath(fromId: Long, toId: Long, checkPoints: List[CheckPoint]): Unit = {
     println("-------------------")
+    println(s"the path from $fromId to $toId:")
     val paths = getAllPaths(fromId, toId, checkPoints)
     paths.foreach(list => println(list.mkString(", ")))
   }
@@ -120,6 +125,7 @@ object PathFinder extends App {
 
   val points1 = points0 ::: List(CheckPoint(1, 5, 40), CheckPoint(5, 4, 50), CheckPoint(5, 3, 60), CheckPoint(5, 2, 70), CheckPoint(3, 6, 80))
   printPath(1, 4, points1)
+  printPath(1, 2, points1)
 
 
 }

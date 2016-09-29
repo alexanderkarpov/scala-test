@@ -24,32 +24,44 @@ object PathFinder extends App {
     loop(root, 0.0)
   }
 
-  type Path = List[TreeNode]
+  type TreePath = List[TreeNode]
 
-  def getAllPaths(root: TreeNode): List[Path] = {
+  def getAllPaths(root: TreeNode): List[TreePath] = {
 
-    def loop(node: TreeNode, acc: List[Path], currentPath: Path): List[Path] = {
+    def loop(node: TreeNode, acc: List[TreePath], currentPath: TreePath): List[TreePath] = {
       if(node == null) acc ::: List(currentPath)
-      else node.nodes match {
+      else
+        node.nodes match {
         case Nil => loop(null, acc, currentPath ::: List(node))
         case head :: Nil => loop(head, acc, currentPath ::: List(node))
         case childNodes => {
           val path = currentPath ::: List(node)
-          val listOfLists: List[List[Path]] = childNodes.map(childNode => loop(childNode, acc, path))
-          (listOfLists foldRight List[Path]()) ((a, b) => a ::: b)
+          val listOfLists: List[List[TreePath]] = childNodes.map(childNode => loop(childNode, acc, path))
+          (listOfLists foldRight List[TreePath]()) ((a, b) => a ::: b)
         }
       }
-
-
     }
 
     loop(root, List(), List())
+  }
+
+  type Path = List[Long]
+  case class CheckPoint(id: Long, nextId: Long, weight: Double)
+
+  def getAllPossiblePaths(fromId: Long, toId: Long, checkPoints: List[CheckPoint]): List[Path] = {
+
+    val possibleMoves: Map[Long, List[CheckPoint]] = checkPoints.groupBy(_.id) withDefaultValue Nil
+
+//    def loop(point: CheckPoint, acc: List[Path], currentPath: Path): List[Path] = {
+//
+//    }
+    ???
 
   }
 
   val id = new AtomicLong
 
-  def nextId = id.incrementAndGet
+  def nextId: Long = id.incrementAndGet
 
   def Node(weight: Double, children: TreeNode*) = TreeNode(nextId, weight, children.toList)
 
@@ -75,7 +87,9 @@ object PathFinder extends App {
   printPaths(tree2)
 
 
+  val map: Map[Long, String] = Map(1L -> "111", 2L -> "222") withDefaultValue "UNKNOWN"
 
+  println(map(3))
 
 
 }
@@ -84,4 +98,4 @@ case class TreeNode(id: Long, weight: Double, nodes: List[TreeNode]) {
   override def toString: String = s"[id=$id, weight=$weight, {${nodes.mkString(",")}}"
 }
 
-case class CheckPoint(id: Long, nextId: Long, weight: Double)
+

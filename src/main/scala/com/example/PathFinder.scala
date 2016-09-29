@@ -24,13 +24,19 @@ object PathFinder extends App {
     loop(root, 0.0)
   }
 
-  def getAllPaths(root: TreeNode): Set[List[TreeNode]] = {
+  type Path = List[TreeNode]
 
-    def loop(node: TreeNode, acc: Set[List[TreeNode]], currentPath: List[TreeNode]): Set[List[TreeNode]] = {
-      if(node == null) acc + currentPath
+  def getAllPaths(root: TreeNode): List[Path] = {
+
+    def loop(node: TreeNode, acc: List[Path], currentPath: Path): List[Path] = {
+      if(node == null) acc ::: List(currentPath)
       else node.nodes match {
         case Nil => loop(null, acc, currentPath ::: List(node))
         case head :: Nil => loop(head, acc, currentPath ::: List(node))
+        case List(left, right) => {
+          val path = currentPath ::: List(node)
+          loop(left, acc, path) ::: loop(right, acc, path)
+        }
 //        case List(left, right) => {
 //          val newPath = currentPath ::: List(node)
 //
@@ -40,7 +46,7 @@ object PathFinder extends App {
 
     }
 
-    loop(root, Set(), List())
+    loop(root, List(), List())
 
   }
 
@@ -57,13 +63,19 @@ object PathFinder extends App {
   println(tree)
 
 
+  def printPaths(tree: TreeNode): Unit = {
+    println("-------------------")
+    val paths = getAllPaths(tree)
+    paths.foreach(list => println(list.map(node => (node.id, node.weight)).mkString("[","; ","]")))
+  }
+
+
+
   val tree1 = Node(1, Node(2, Node(3)))
+  printPaths(tree1)
 
-  val paths = getAllPaths(tree1)
-
-  println("-------------------")
-  paths.foreach(list => println(list.map(node => (node.id, node.weight)).mkString("[","; ","]")))
-
+  val tree2 = Node(1, Node(2), Node(3, Node(4), Node(5)))
+  printPaths(tree2)
 
 
 }

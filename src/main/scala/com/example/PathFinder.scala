@@ -80,7 +80,8 @@ object PathFinder extends App {
     val possibleStartPoints = possibleMoves(fromId)
 
     val listOfResults: List[List[Path]] = possibleStartPoints.map(startPoint => loop(startPoint, Nil, Nil, Set()))
-    ((listOfResults foldRight List[Path]()) ((a, b) => a ::: b)).toSet
+//    ((listOfResults foldRight List[Path]()) ((a, b) => a ::: b)).toSet
+    listOfResults.flatMap(list => list).toSet
 
   }
 

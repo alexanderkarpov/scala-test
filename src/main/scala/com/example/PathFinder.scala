@@ -52,7 +52,13 @@ object PathFinder extends App {
     val possibleMoves: Map[Long, List[CheckPoint]] = checkPoints.groupBy(_.id) withDefaultValue Nil
 
     def loop(point: CheckPoint, acc: List[Path], currentPath: Path): List[Path] = {
-      if (point == null) acc ::: List(currentPath)
+      if (point == null) {
+        currentPath match {
+          case Nil => acc
+          case list if list.last.nextId == toId => acc ::: List(currentPath)
+          case list => acc
+        }
+      }
       else
         possibleMoves(point.nextId) match {
           case Nil => loop(null, acc, currentPath ::: List(point))

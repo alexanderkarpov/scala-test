@@ -26,36 +26,50 @@ object PathFinder extends App {
 
   type TreePath = List[TreeNode]
 
-  def getAllPaths(root: TreeNode): List[TreePath] = {
+  def getAllThreePaths(root: TreeNode): List[TreePath] = {
 
     def loop(node: TreeNode, acc: List[TreePath], currentPath: TreePath): List[TreePath] = {
-      if(node == null) acc ::: List(currentPath)
+      if (node == null) acc ::: List(currentPath)
       else
         node.nodes match {
-        case Nil => loop(null, acc, currentPath ::: List(node))
-        case head :: Nil => loop(head, acc, currentPath ::: List(node))
-        case childNodes => {
-          val path = currentPath ::: List(node)
-          val listOfLists: List[List[TreePath]] = childNodes.map(childNode => loop(childNode, acc, path))
-          (listOfLists foldRight List[TreePath]()) ((a, b) => a ::: b)
+          case Nil => loop(null, acc, currentPath ::: List(node))
+          //        case head :: Nil => loop(head, acc, currentPath ::: List(node))
+          case childNodes => {
+            val path = currentPath ::: List(node)
+            val listOfLists: List[List[TreePath]] = childNodes.map(childNode => loop(childNode, acc, path))
+            (listOfLists foldRight List[TreePath]()) ((a, b) => a ::: b)
+          }
         }
-      }
     }
 
     loop(root, List(), List())
   }
 
-  type Path = List[Long]
-  case class CheckPoint(id: Long, nextId: Long, weight: Double)
+  type Path = List[CheckPoint]
 
-  def getAllPossiblePaths(fromId: Long, toId: Long, checkPoints: List[CheckPoint]): List[Path] = {
+  def getAllPaths(fromId: Long, toId: Long, checkPoints: List[CheckPoint]): List[Path] = {
 
     val possibleMoves: Map[Long, List[CheckPoint]] = checkPoints.groupBy(_.id) withDefaultValue Nil
 
-//    def loop(point: CheckPoint, acc: List[Path], currentPath: Path): List[Path] = {
-//
-//    }
-    ???
+    def loop(point: CheckPoint, acc: List[Path], currentPath: Path): List[Path] = {
+      if (point == null) acc ::: List(currentPath)
+      else
+        possibleMoves(point.nextId) match {
+          case Nil => loop(null, acc, currentPath ::: List(point))
+          case nextPoints => {
+            val path = currentPath ::: List(point)
+            val listOfLists: List[List[Path]] = nextPoints.map(nextPoint => loop(nextPoint, acc, path))
+            (listOfLists foldRight List[Path]()) ((a, b) => a ::: b)
+          }
+        }
+
+
+    }
+
+    val possibleStartPoints = possibleMoves(fromId)
+
+    val listOfResults: List[List[Path]] = possibleStartPoints.map(startPoint => loop(startPoint, Nil, Nil))
+    (listOfResults foldRight List[Path]()) ((a, b) => a ::: b)
 
   }
 
@@ -72,24 +86,34 @@ object PathFinder extends App {
   println(tree)
 
 
-  def printPaths(tree: TreeNode): Unit = {
+  def printTreePaths(tree: TreeNode): Unit = {
     println("-------------------")
-    val paths = getAllPaths(tree)
-    paths.foreach(list => println(list.map(node => (node.id, node.weight)).mkString("[","; ","]")))
+    val paths = getAllThreePaths(tree)
+    paths.foreach(list => println(list.map(node => (node.id, node.weight)).mkString("[", "; ", "]")))
   }
 
 
+  val tree0 = Node(1)
+  printTreePaths(tree0)
 
   val tree1 = Node(1, Node(2, Node(3)))
-  printPaths(tree1)
+  printTreePaths(tree1)
 
-  val tree2 = Node(1, Node(2), Node(3, Node(4), Node(5), Node(6), Node(7)))
-  printPaths(tree2)
+  val tree2 = Node(1, Node(2), Node(3, Node(4), Node(5), Node(6), Node(7, Node(8))), Node(9))
+  printTreePaths(tree2)
 
 
-  val map: Map[Long, String] = Map(1L -> "111", 2L -> "222") withDefaultValue "UNKNOWN"
+  def printPath(fromId: Long, toId: Long, checkPoints: List[CheckPoint]): Unit = {
+    println("-------------------")
+    val paths = getAllPaths(fromId, toId, checkPoints)
+    paths.foreach(list => println(list.mkString(", ")))
+  }
 
-  println(map(3))
+  val points0 = List(CheckPoint(1, 2, 10), CheckPoint(2, 3, 20), CheckPoint(3, 4, 30))
+  printPath(1, 4, points0)
+
+  val points1 = points0 ::: List(CheckPoint(1, 5, 40), CheckPoint(5, 4, 50), CheckPoint(5, 3, 60), CheckPoint(5, 2, 70), CheckPoint(3, 6, 80))
+  printPath(1, 4, points1)
 
 
 }
@@ -97,5 +121,7 @@ object PathFinder extends App {
 case class TreeNode(id: Long, weight: Double, nodes: List[TreeNode]) {
   override def toString: String = s"[id=$id, weight=$weight, {${nodes.mkString(",")}}"
 }
+
+case class CheckPoint(id: Long, nextId: Long, weight: Double)
 
 

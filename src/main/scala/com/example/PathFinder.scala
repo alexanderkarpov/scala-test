@@ -33,14 +33,11 @@ object PathFinder extends App {
       else node.nodes match {
         case Nil => loop(null, acc, currentPath ::: List(node))
         case head :: Nil => loop(head, acc, currentPath ::: List(node))
-        case List(left, right) => {
+        case childNodes => {
           val path = currentPath ::: List(node)
-          loop(left, acc, path) ::: loop(right, acc, path)
+          val listOfLists: List[List[Path]] = childNodes.map(childNode => loop(childNode, acc, path))
+          (listOfLists foldRight List[Path]()) ((a, b) => a ::: b)
         }
-//        case List(left, right) => {
-//          val newPath = currentPath ::: List(node)
-//
-//        }
       }
 
 
@@ -74,8 +71,11 @@ object PathFinder extends App {
   val tree1 = Node(1, Node(2, Node(3)))
   printPaths(tree1)
 
-  val tree2 = Node(1, Node(2), Node(3, Node(4), Node(5)))
+  val tree2 = Node(1, Node(2), Node(3, Node(4), Node(5), Node(6), Node(7)))
   printPaths(tree2)
+
+
+
 
 
 }

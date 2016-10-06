@@ -1,5 +1,7 @@
 package coursera.course2.week4.lecture2.frp
 
+import scala.util.DynamicVariable
+
 class Signal[T](expr: => T) {
 
   import Signal._
@@ -40,7 +42,17 @@ object NoSignal extends Signal[Nothing](???) {
 }
 
 object Signal {
-  private val caller = new StackableVariable[Signal[_]](NoSignal)
+  /*
+  Another Solution: Implicit Parameters
+  Thread-local state still comes with a number of disadvantages:
+  ▶ Its imperative nature often produces hidden dependencies which are
+    hard to manage.
+  ▶ Its implementation on the JDK involves a global hash table lookup,
+    which can be a performance problem.
+  ▶ It does not play well in situations where threads are multiplexed
+    between several tasks.
+   */
+  private val caller = new DynamicVariable[Signal[_]](NoSignal)
 
   def apply[T](expr: => T) = new Signal(expr)
 }

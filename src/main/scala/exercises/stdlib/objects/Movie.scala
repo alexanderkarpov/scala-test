@@ -1,4 +1,4 @@
-package exercises.objects
+package exercises.stdlib.objects
 
 //An object that has the same name as a class is called a companion object of the class,
 // and it is often used to contain factory methods for the class that it complements.

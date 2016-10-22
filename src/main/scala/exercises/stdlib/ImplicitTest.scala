@@ -10,6 +10,7 @@ abstract class Monoid[A] extends SemiGroup[A] {
 
 object ImplicitTest extends App {
 
+  //Implicits wrap around existing classes to provide extra functionality.
   implicit object StringMonoid extends Monoid[String] {
     def add(x: String, y: String): String = x concat y
 

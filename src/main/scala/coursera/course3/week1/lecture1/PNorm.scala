@@ -15,6 +15,8 @@ object PNorm extends App{
     ceil(pow(sum1 + sum2, 1 / p)).toInt
   }
 
+  def power(x: Int, p: Double): Int = ceil(pow(x, p)).toInt
+
   def parallel(i: Int, i1: Int) : (Int, Int) = ???
 
 

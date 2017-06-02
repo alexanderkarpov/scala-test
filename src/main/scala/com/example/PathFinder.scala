@@ -14,7 +14,9 @@ object PathFinder extends App {
         case head :: Nil => loop(head, node.weight) + acc
         case head :: tail => {
           val headNodeWeight = loop(head, node.weight)
-          val middleNodesWeights: List[Double] = (for (i <- (0 until tail.length - 1)) yield loop(tail(i), 0.0)).toList
+          val middleNodesWeights: List[Double] = {
+            (for (i <- 0 until tail.length - 1) yield loop(tail(i), 0.0)).toList
+          }
           val lastNodeWeight = loop(tail.last, acc)
           headNodeWeight + middleNodesWeights.sum + lastNodeWeight
         }

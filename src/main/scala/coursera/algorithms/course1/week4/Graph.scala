@@ -1,63 +1,33 @@
 package coursera.algorithms.course1.week4
 
-case class Graph(vertices: List[Vertex]) {
+case class Graph(edges: List[(Int, Int)]) {
 
-  //TODO: Graph(vertices: List[Vertex]) should be a private constructor
+  def this() = this(Nil)
 
-  def this(vertex: Vertex) = this(List(vertex))
-
-  val verticesIds: Set[Int] = vertices.map(v => v.id).toSet
-
-  def addVertex(id: Int): Graph = {
-    if (verticesIds.contains(id)) throw new IllegalArgumentException(s"vertex $id already exists")
-    val list: List[Vertex] = new Vertex(id) :: vertices.toList
-    new Graph(list)
+  def addEdge(v1: Int, v2: Int) = {
+    if (v1 == v2) this
+    else Graph(makeEdge(v1, v2) :: edges)
   }
 
-  def addEdge(id1: Int, id2: Int): Graph = {
-    val map: Map[Int, Vertex] = vertices.map(v => v.id -> v).toMap
-    val vertex1 = ???
-    val vertex2 = map(id2).edges.map(v => v.id).toSet
+  def removeEdge(v1: Int, v2: Int): Graph = {
+    val edge = makeEdge(v1, v2)
+    if (!edges.toSet.contains(edge)) throw new IllegalArgumentException("edge not found")
 
+    def affectCondition(p: (Int, Int), v: Int) = p._1 == v || p._2 == v
 
+    val affectedEdges = edges.filter(p => affectCondition(p, edge._1)).filter(p => p != edge)
+      .map(e => {
+        if (e._1 == edge._1) (edge._2, e._2)
+        else (e._1, edge._2)
+      })
+      .map(e => makeEdge(e._1, e._2))
+
+    val notAffectedEdges = edges.filter(p => !affectCondition(p, edge._1)).filter(p => p != edge)
+
+    Graph((affectedEdges ::: notAffectedEdges).filter(e => e._1 != e._2))
   }
 
-  def add(vertex: Vertex): Graph = {
-    //TODO: find vertex(vertices) to be connected to the new one
-    val verticesToBeConnected: Set[Vertex] = vertices.filter(v => v.edges.toSet.contains(vertex.id))
-
-    //TODO: connect vertices
-    ???
-  }
-
-
-}
-
-
-case class Vertex(id: Int, edges: List[Vertex]) {
-
-  def this(id: Int) = this(id, List.empty)
-
-  def getVerticesIds: Set[Int] = {
-
-    def loop(edges: List[Vertex], acc: List[Int]): List[Int] = edges match {
-      case Nil => acc
-      case list => list.flatMap(v => loop(v.edges, v.id :: acc))
-    }
-
-    loop(edges, List(id)).toSet
-
-  }
-
-  def addEdge(edge: Vertex): Vertex = {
-    if(!edges.map(_.id).toSet.contains(edge.id)){
-      Vertex(id, edge :: edges)
-    } else {
-      throw new IllegalArgumentException("already exists")
-    }
-  }
-
-
+  private def makeEdge(v1: Int, v2: Int) = (Math.min(v1, v2), Math.max(v1, v2))
 }
 
 

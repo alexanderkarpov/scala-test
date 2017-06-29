@@ -19,7 +19,7 @@ class DirectedGraphTest {
       6 -> List(7)
     )
 
-    val graph = new DirectedGraph(tree)
+    val graph = DirectedGraph(tree)
 
     val res = graph.depthFirstSearch(1)
     assertEquals(res, List(1, 2, 3, 4, 5, 6, 7))
@@ -37,7 +37,7 @@ class DirectedGraphTest {
       5 -> List(1)
     )
 
-    val graph = new DirectedGraph(cyclicGraph)
+    val graph = DirectedGraph(cyclicGraph)
 
     val res = graph.depthFirstSearch(1)
     assertEquals(res, List(1, 2, 3, 4, 5))
@@ -60,7 +60,33 @@ class DirectedGraphTest {
 
     val expected = List(1, 7, 9, 6, 8, 2, 5, 3, 4)
 
-    assertEquals(new DirectedGraph(map).depthFirstSearch(1), expected)
+    assertEquals(DirectedGraph(map).depthFirstSearch(1), expected)
+
+  }
+
+  @Test
+  def reverse() = {
+    val tree: Map[Int, List[Int]] = Map(
+      1 -> List(2),
+      2 -> List(3, 6),
+      3 -> List(4, 5),
+      6 -> List(7)
+    )
+
+    val reversedTree: Map[Int, List[Int]] = Map(
+      2 -> List(1),
+      3 -> List(2),
+      6 -> List(2),
+      4 -> List(3),
+      5 -> List(3),
+      7 -> List(6)
+    )
+
+    val graph = DirectedGraph(reversedTree)
+    graph.reverse
+
+    assertEquals(DirectedGraph(reversedTree).reverse, DirectedGraph(tree))
+    assertEquals(DirectedGraph(tree).reverse, DirectedGraph(reversedTree))
 
   }
 

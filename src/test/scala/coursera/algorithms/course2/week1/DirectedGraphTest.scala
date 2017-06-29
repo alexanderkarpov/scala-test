@@ -85,12 +85,15 @@ class DirectedGraphTest {
     val graph = DirectedGraph(reversedTree)
     graph.reverse
 
-    assertEquals(DirectedGraph(reversedTree).reverse, DirectedGraph(tree))
-    assertEquals(DirectedGraph(tree).reverse, DirectedGraph(reversedTree))
+    assertEquals(DirectedGraph(reversedTree).reverse.vertices.map(e => (e._1, e._2.toSet)),
+      DirectedGraph(tree).vertices.map(e => (e._1, e._2.toSet)))
+
+    assertEquals(DirectedGraph(tree).reverse.vertices.map(e => (e._1, e._2.toSet)),
+      DirectedGraph(reversedTree).vertices.map(e => (e._1, e._2.toSet)))
 
   }
 
-  def assertEquals[T](actual: T, expected: T) = {
+  def assertEquals[T](actual: T, expected: T): Unit = {
     assertTrue(s"expected $expected but was $actual", actual == expected)
   }
 

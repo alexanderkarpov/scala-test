@@ -1,5 +1,7 @@
 package coursera.algorithms.course2.week1
 
+import java.util.Date
+
 import scala.collection.mutable
 import scala.io.Source
 
@@ -46,7 +48,9 @@ object DirectedGraph {
   def main(args: Array[String]): Unit = {
     val srcFileName = "src/main/resources/algorithms/scc.txt"
     val graph = DirectedGraph.fromFile(srcFileName)
-    println(graph.vertices.size)
+    println(s"${graph.vertices.size} - ${new Date}")
+    println(s"${graph.reverse.vertices.size} - ${new Date}")
+    println(s"${graph.reverse.vertices.size} - ${new Date}")
   }
 
   def fromFile(path: String): DirectedGraph = {

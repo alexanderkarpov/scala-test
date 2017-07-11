@@ -19,6 +19,9 @@ case class DirectedGraph(vertices: Map[Int, List[Int]]) {
     DirectedGraph(reversedVertices)
   }
 
+  lazy val verticesValues: List[Int] =
+    vertices.flatMap(e => e._1 :: e._2).toList.distinct.sorted(Ordering[Int].reverse)
+
   def depthFirstSearch(startVertex: Int): List[Int] = {
     if (!vertices.contains(startVertex)) throw new IllegalArgumentException("start vertex doesn't exist")
 
@@ -44,6 +47,28 @@ case class DirectedGraph(vertices: Map[Int, List[Int]]) {
 }
 
 object DirectedGraph {
+
+  def dfsLoop(g: DirectedGraph) = {
+    val t = new Counter
+    val f = new Array[Int](g.verticesValues.size)
+    val explored = new mutable.HashSet[Int]
+
+    g.verticesValues
+      .foreach(i => if (!explored.contains(i)) dfs(g, i, f, explored, t))
+
+    f.toList
+  }
+
+  def dfs(g: DirectedGraph, i: Int, f: Array[Int], explored: mutable.Set[Int], t: Counter): Unit = {
+    explored.add(i)
+    //TODO: set leader(i) := nodes ????
+    val vertices: List[Int] = g.vertices.getOrElse(i, Nil)
+    vertices
+      .foreach(j => if (!explored.contains(j)) dfs(g, j, f, explored, t))
+
+    t.increment
+    f.update(i - 1, t.value)
+  }
 
   def main(args: Array[String]): Unit = {
     val srcFileName = "src/main/resources/algorithms/scc.txt"
@@ -73,5 +98,14 @@ object DirectedGraph {
     graph
   }
 
+}
+
+class Counter {
+  var value: Int = 0
+
+  def increment: Int = {
+    value = value + 1
+    value
+  }
 }
 

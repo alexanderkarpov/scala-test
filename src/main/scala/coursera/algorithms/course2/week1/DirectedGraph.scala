@@ -64,7 +64,7 @@ object DirectedGraph {
     //TODO: set leader(i) := nodes ????
     val vertices: List[Int] = g.vertices.getOrElse(i, Nil)
     vertices
-      .foreach(j => if (!explored.contains(j)) dfs(g, j, f, explored, t))
+      .foreach(j => if (!explored.contains(j)) dfs(g, j, f, explored, t)) //TODO: convert to tail recursion
 
     t.increment
     f.update(i - 1, t.value)
@@ -76,6 +76,10 @@ object DirectedGraph {
     println(s"${graph.vertices.size} - ${new Date}")
     println(s"${graph.reverse.vertices.size} - ${new Date}")
     println(s"${graph.reverse.vertices.size} - ${new Date}")
+
+    println(s"${graph.verticesValues.size} - ${graph.verticesValues.head}")
+    val res = dfsLoop(graph)
+    println(s"${res.length}")
   }
 
   def fromFile(path: String): DirectedGraph = {

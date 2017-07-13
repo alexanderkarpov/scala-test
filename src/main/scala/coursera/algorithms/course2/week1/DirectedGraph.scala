@@ -48,38 +48,63 @@ case class DirectedGraph(vertices: Map[Int, List[Int]]) {
 
 object DirectedGraph {
 
-  def dfsLoop(g: DirectedGraph) = {
+  def kasaraju(g: DirectedGraph) = {
+    val magicalOrdering = dfsLoop(g.reverse)
+
+  }
+
+
+  def dfsLoop(g: DirectedGraph): (List[Int], List[List[Int]]) = { // (finishingTimes, sccs)
     val t = new Counter
     val f = new Array[Int](g.verticesValues.size)
     val explored = new mutable.HashSet[Int]
 
-    g.verticesValues
-      .foreach(i => if (!explored.contains(i)) dfs(g, i, f, explored, t))
 
-    f.toList
+    val sccs = new mutable.MutableList[List[Int]]
+    g.verticesValues.foreach(i => if (!explored.contains(i)) {
+      dfs(g, i, f, explored, t).foreach(sccs += _)
+    })
+
+
+
+    println(s"SCCs: $sccs")
+
+    (f.toList, sccs.toList)
   }
 
-  def dfs(g: DirectedGraph, i: Int, f: Array[Int], explored: mutable.Set[Int], t: Counter): Unit = {
-    explored.add(i)
-    //TODO: set leader(i) := nodes ????
-    val vertices: List[Int] = g.vertices.getOrElse(i, Nil)
-    vertices
-      .foreach(j => if (!explored.contains(j)) dfs(g, j, f, explored, t)) //TODO: convert to tail recursion
+  def dfs(g: DirectedGraph, i: Int, f: Array[Int], explored: mutable.Set[Int], t: Counter): List[List[Int]] = {
 
-    t.increment
-    f.update(i - 1, t.value)
+    val currentScc: mutable.MutableList[Int] = new mutable.MutableList[Int]()
+    val acc: mutable.MutableList[List[Int]] = new mutable.MutableList[List[Int]]()
+
+    def loop(g: DirectedGraph, i: Int): Unit = {
+      explored.add(i)
+      currentScc += i
+      //TODO: set leader(i) := nodes ????
+      val notExplored = g.vertices.getOrElse(i, Nil).filter(!explored.contains(_))
+      if(notExplored.isEmpty) {
+        acc += currentScc.toList
+        currentScc.clear
+      }
+      notExplored.foreach(loop(g, _))
+
+
+      t.increment
+      f.update(i - 1, t.value)
+    }
+
+    loop(g, i)
+    acc.toList
   }
 
   def main(args: Array[String]): Unit = {
     val srcFileName = "src/main/resources/algorithms/scc.txt"
     val graph = DirectedGraph.fromFile(srcFileName)
     println(s"${graph.vertices.size} - ${new Date}")
-    println(s"${graph.reverse.vertices.size} - ${new Date}")
-    println(s"${graph.reverse.vertices.size} - ${new Date}")
 
     println(s"${graph.verticesValues.size} - ${graph.verticesValues.head}")
     val res = dfsLoop(graph)
-    println(s"${res.length}")
+    println(s"${res._1.length} - ${new Date}")
   }
 
   def fromFile(path: String): DirectedGraph = {

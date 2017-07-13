@@ -132,10 +132,24 @@ class DirectedGraphTest {
 
     val res = DirectedGraph.dfsLoop(DirectedGraph(map))
     assertEquals(res, List(7, 3, 1, 8, 2, 5, 9, 4, 6))
+  }
 
-    val res2 = DirectedGraph.dfsLoop(DirectedGraph(map).reverse)
+  @Test
+  def kasaraju() = {
+    val map = Map(
+      1 -> List(7),
+      7 -> List(4, 9),
+      4 -> List(1),
+      9 -> List(6),
+      6 -> List(3, 8),
+      3 -> List(9),
+      8 -> List(2),
+      2 -> List(5),
+      5 -> List(8)
+    )
 
-    println(s"$res\n$res2")
+    val res = DirectedGraph.kasaraju(DirectedGraph(map))
+    println(res)
   }
 
   def assertEquals[T](actual: T, expected: T): Unit = {
